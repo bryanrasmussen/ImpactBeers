@@ -1,0 +1,99 @@
+type Beer {
+  name: String!
+  year: Date!
+  type: String!
+  brewery: String!
+}
+
+type Brewery {
+  name: String!
+  founded: Date!
+  country: String!
+  beers: [Beer]
+}
+
+type Pub {
+  name: String!
+  founded: Date!
+  address: String!
+  country: String
+  beers: [Beer]
+}
+
+union Commentatable = Beer | Brewery | Pub
+
+type Comment {
+ on: [Commentatable!]
+ by: User!
+ rating: Int
+ notes: [String]
+}
+
+type Collection {
+  beers: [Beer]
+  owner: User!
+}
+
+input BeerAddedInput {
+  name: String!
+  year: Date!
+  type: String!
+  brewery: String!
+}
+
+input PubAddedInput {
+  name: String!
+  founded: Date!
+  address: String!
+  country: String
+}
+
+input BreweryAddedInput {
+  name: String!
+  founded: Date!
+  country: String!
+}
+
+
+""" Beers do not have id but name and brewery, so hopefully no brewery has two different beers with same name """
+input BeerPubInput {
+  name: String!
+  address: String!
+  beerName: String!
+  breweryName: String!
+}
+
+
+input BeerCollectionInput {
+  userId: ID!
+  beerName: String!
+  breweryName: String!
+}
+
+""" Theory is that there are no two breweries with same name in same country """
+input BeerBreweryInput {
+  beerName: String!
+  breweryName: String!
+  breweryCountry: String!
+}
+
+
+type Query {
+  beers: [Beer]
+  breweries: [Brewery]
+  pubs: [Pub]
+  collection(id: ID!): Collection
+  comments(id: ID!): [Comment]
+}
+
+type Mutation {
+  addBeer(beerAddedInput: BeerAddedInput!): Beer!
+  addPub(pubAddedInput: PubAddedInput!): Pub!
+  addBrewery(breweryAddedInput: BreweryAddedInput!): Brewery!
+  addBeerToPub(addBeerToPubInput: BeerPubInput!): Pub!
+  addBeerToBrewery(addBeerToBreweryInput: BeerBreweryInput!): Brewery!
+  removeBeerFromBrewery(removeBeerFromBreweryInput: BeerBreweryInput!): Brewery!
+  removeBeerFromPub(removeBeerFromPubInput: BeerPubInput!): Pub!
+  removeBeerFromCollection(removeBeerFromCollectionInput: BeerCollectionInput!): Collection!
+  addBeerToCollection(addBeerToCollectionInput: BeerCollectionInput!): Collection!
+}

@@ -1,0 +1,22 @@
+type User {
+  id: ID!
+  email: String!
+  username: String!
+  password: String!
+}
+""" Since this is just example app will not do all user management necessary, so no remove, update """
+input CreateUserInput {
+  email: String!
+  username: String!
+  password: String!
+}
+
+type Query {
+  users: [User]!
+  user(id: ID!): User
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  loginUser(username: String!, password: String!): User
+}
